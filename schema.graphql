@@ -1,0 +1,56 @@
+# GraphQL Schema for Polymarket Orders Indexer
+# This defines the data structure that will be indexed
+
+type Order @entity {
+  id: ID! # orderHash
+  orderHash: Bytes! # The unique order hash
+  maker: Bytes! # Address of the maker
+  taker: Bytes! # Address of the taker
+  makerAssetId: BigInt! # Asset ID for maker's asset
+  takerAssetId: BigInt! # Asset ID for taker's asset
+  makerAmountFilled: BigInt! # Amount of maker's asset filled
+  takerAmountFilled: BigInt! # Amount of taker's asset filled
+  fee: BigInt! # Fee amount
+  blockNumber: BigInt! # Block number where event occurred
+  transactionHash: Bytes! # Transaction hash
+  timestamp: BigInt! # Block timestamp
+  
+  # Computed fields
+  side: String! # "BUY" or "SELL"
+  price: BigDecimal! # Calculated price in cents
+  volumeUsd: BigDecimal! # Volume in USD
+  marketQuestion: String # Market question (if available)
+  
+  # Metadata
+  createdAt: BigInt! # When this order was first indexed
+  updatedAt: BigInt! # When this order was last updated
+}
+
+type Market @entity {
+  id: ID! # tokenId
+  tokenId: BigInt! # The token ID
+  question: String! # Market question
+  description: String # Market description
+  endDate: BigInt # Market end date
+  resolutionDate: BigInt # Market resolution date
+  status: String! # "ACTIVE", "RESOLVED", "CANCELLED"
+  
+  # Statistics
+  totalVolume: BigDecimal! # Total volume traded
+  totalOrders: BigInt! # Total number of orders
+  lastOrderAt: BigInt # Timestamp of last order
+  
+  # Metadata
+  createdAt: BigInt! # When this market was first indexed
+  updatedAt: BigInt! # When this market was last updated
+}
+
+type DailyStats @entity {
+  id: ID! # date (YYYY-MM-DD)
+  date: String! # Date in YYYY-MM-DD format
+  totalVolume: BigDecimal! # Total volume for the day
+  totalOrders: BigInt! # Total orders for the day
+  uniqueTraders: BigInt! # Unique traders for the day
+  avgOrderSize: BigDecimal! # Average order size
+  createdAt: BigInt! # When this stat was created
+}

@@ -1,0 +1,11 @@
+# Files to ignore during Envio deployment
+node_modules/
+dist/
+*.log
+.env
+.env.local
+.env.production
+.env.development
+.DS_Store
+*.tgz
+*.tar.gz

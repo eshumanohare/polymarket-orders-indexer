@@ -1,0 +1,86 @@
+# Envio HyperIndex Configuration for Polymarket CTF Exchange
+# Documentation: https://docs.envio.dev/docs/HyperIndex/hosted-service-deployment
+
+# Network configuration
+network:
+  name: polygon
+  chainId: 137
+  rpcUrl: https://polygon-rpc.com
+
+# Contract configuration
+contracts:
+  - name: CTFExchange
+    address: "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E"
+    abi: |
+      [
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "orderHash",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "maker",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "taker",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "makerAssetId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "takerAssetId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "makerAmountFilled",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "takerAmountFilled",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            }
+          ],
+          "name": "OrderFilled",
+          "type": "event"
+        }
+      ]
+
+# Event handlers
+eventHandlers:
+  - event: OrderFilled
+    handler: handleOrderFilled
+
+# Start block (recent block for faster initial sync)
+startBlock: 50000000
+
+# Block range for processing
+blockRange: 1000
+
+# Environment variables
+env:
+  ENVIO_API_TOKEN: "6f20c5c4-0f67-4713-9bd4-4d56760b8122"
