@@ -46,51 +46,6 @@ function calculateVolumeUsd(
   return usdcAmount.toBigDecimal().div(BigDecimal.fromString("1000000")); // Convert from 6 decimals
 }
 
-// Helper function to get or create market
-function getOrCreateMarket(tokenId: BigInt): Market {
-  let market = Market.load(tokenId.toString());
-  
-  if (!market) {
-    market = new Market(tokenId.toString());
-    market.tokenId = tokenId;
-    market.question = `Market ${tokenId.toString()}`; // Default question
-    market.description = "";
-    market.endDate = BigInt.fromI32(0);
-    market.resolutionDate = BigInt.fromI32(0);
-    market.status = "ACTIVE";
-    market.totalVolume = BigDecimal.fromString("0");
-    market.totalOrders = BigInt.fromI32(0);
-    market.lastOrderAt = BigInt.fromI32(0);
-    market.createdAt = BigInt.fromI32(0);
-    market.updatedAt = BigInt.fromI32(0);
-  }
-  
-  return market;
-}
-
-// Helper function to update daily stats
-function updateDailyStats(volumeUsd: BigDecimal, timestamp: BigInt): void {
-  const dayId = timestamp.toI32() / 86400; // Days since epoch
-  const dayIdString = dayId.toString();
-  
-  let dailyStats = DailyStats.load(dayIdString);
-  
-  if (!dailyStats) {
-    dailyStats = new DailyStats(dayIdString);
-    dailyStats.date = new Date(timestamp.toI32() * 1000).toISOString().split('T')[0];
-    dailyStats.totalVolume = BigDecimal.fromString("0");
-    dailyStats.totalOrders = BigInt.fromI32(0);
-    dailyStats.uniqueTraders = BigInt.fromI32(0);
-    dailyStats.avgOrderSize = BigDecimal.fromString("0");
-    dailyStats.createdAt = timestamp;
-  }
-  
-  dailyStats.totalVolume = dailyStats.totalVolume.plus(volumeUsd);
-  dailyStats.totalOrders = dailyStats.totalOrders.plus(BigInt.fromI32(1));
-  dailyStats.avgOrderSize = dailyStats.totalVolume.div(dailyStats.totalOrders.toBigDecimal());
-  dailyStats.save();
-}
-
 // Main event handler for OrderFilled events
 export function handleOrderFilled(event: OrderFilled): void {
   // Create order ID from orderHash
@@ -133,32 +88,6 @@ export function handleOrderFilled(event: OrderFilled): void {
   order.createdAt = event.block.timestamp;
   order.updatedAt = event.block.timestamp;
   
-  // Get market question (you can enhance this with actual market data)
-  const tokenId = order.side === "BUY" ? event.params.takerAssetId : event.params.makerAssetId;
-  if (!tokenId.equals(BigInt.fromI32(0))) {
-    const market = getOrCreateMarket(tokenId);
-    order.marketQuestion = market.question;
-    
-    // Update market stats
-    market.totalVolume = market.totalVolume.plus(order.volumeUsd);
-    market.totalOrders = market.totalOrders.plus(BigInt.fromI32(1));
-    market.lastOrderAt = event.block.timestamp;
-    market.updatedAt = event.block.timestamp;
-    market.save();
-  }
-  
   // Save the order
   order.save();
-  
-  // Update daily stats
-  updateDailyStats(order.volumeUsd, event.block.timestamp);
-  
-  // Log the order (for debugging)
-  log.info("Processed OrderFilled: {} - {} {} at {}¢ for ${}", [
-    orderId,
-    order.side,
-    order.makerAmountFilled.toString(),
-    order.price.toString(),
-    order.volumeUsd.toString()
-  ]);
 }

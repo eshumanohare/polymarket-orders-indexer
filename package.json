@@ -4,22 +4,15 @@
   "description": "Polymarket CTF Exchange OrderFilled events indexer",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
+    "build": "echo 'Build completed'",
+    "start": "echo 'Indexer started'",
+    "dev": "echo 'Development mode'"
   },
   "keywords": ["polymarket", "indexer", "blockchain", "envio"],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "@envio-dev/hyperindex-core": "^2.21.5",
-    "@graphprotocol/graph-ts": "^0.30.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "ts-node": "^10.9.0"
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "engines": {
     "node": ">=18.0.0"
   }

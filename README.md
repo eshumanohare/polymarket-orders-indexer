@@ -7,7 +7,6 @@ This Envio HyperIndex indexer monitors OrderFilled events from the Polymarket CT
 - **Real-time Order Tracking**: Monitors OrderFilled events as they happen
 - **Price Calculation**: Automatically calculates order prices in cents
 - **Volume Tracking**: Tracks USD volume for each order
-- **Market Statistics**: Aggregates data by market and daily stats
 - **GraphQL API**: Provides a GraphQL endpoint for querying indexed data
 
 ## Contract Details
@@ -27,22 +26,8 @@ This Envio HyperIndex indexer monitors OrderFilled events from the Polymarket CT
 - `side`: "BUY" or "SELL"
 - `price`: Calculated price in cents
 - `volumeUsd`: Volume in USD
-- `marketQuestion`: Associated market question
 - `timestamp`: Block timestamp
 - `blockNumber`: Block number
-
-### Market Entity
-- `id`: Token ID
-- `question`: Market question
-- `totalVolume`: Total volume traded
-- `totalOrders`: Total number of orders
-- `status`: Market status
-
-### DailyStats Entity
-- `id`: Date (YYYY-MM-DD)
-- `totalVolume`: Daily volume
-- `totalOrders`: Daily order count
-- `uniqueTraders`: Unique traders count
 
 ## Deployment
 
@@ -76,30 +61,7 @@ query GetRecentOrders {
     side
     price
     volumeUsd
-    marketQuestion
     timestamp
-  }
-}
-
-# Get market statistics
-query GetMarketStats($tokenId: String!) {
-  market(id: $tokenId) {
-    id
-    question
-    totalVolume
-    totalOrders
-    status
-  }
-}
-
-# Get daily statistics
-query GetDailyStats($date: String!) {
-  dailyStats(id: $date) {
-    id
-    totalVolume
-    totalOrders
-    uniqueTraders
-    avgOrderSize
   }
 }
 ```
@@ -129,13 +91,6 @@ Monitor your indexer through the Envio dashboard:
 - Check for errors
 - Monitor performance metrics
 - Set up alerts
-
-## API Integration
-
-The indexed data can be accessed via:
-- **GraphQL Endpoint**: Provided by Envio
-- **REST API**: Available through Envio's API
-- **WebSocket**: Real-time updates (if configured)
 
 ## Support
 
