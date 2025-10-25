@@ -15,5 +15,8 @@
   "devDependencies": {},
   "engines": {
     "node": ">=18.0.0"
+  },
+  "envio": {
+    "version": "2.30.0"
   }
 }

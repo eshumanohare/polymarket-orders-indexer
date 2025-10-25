@@ -11,13 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
+    
+    - name: Clear npm cache
+      run: npm cache clean --force
     
     - name: Install dependencies
       run: npm ci
@@ -29,6 +32,7 @@ jobs:
       run: |
         echo "Validating Envio indexer configuration..."
         echo "Config file exists: $(test -f config.yaml && echo 'YES' || echo 'NO')"
+        echo "JS Config file exists: $(test -f envio.config.js && echo 'YES' || echo 'NO')"
         echo "Schema file exists: $(test -f schema.graphql && echo 'YES' || echo 'NO')"
         echo "Event handlers exist: $(test -f src/EventHandlers.ts && echo 'YES' || echo 'NO')"
         echo "✅ Envio indexer configuration is valid"
@@ -42,7 +46,7 @@ jobs:
         echo "3. Add new indexer"
         echo "4. Connect to this repository"
         echo "5. Configure with:"
-        echo "   - Config file: config.yaml"
+        echo "   - Config file: envio.config.js (or config.yaml)"
         echo "   - Root directory: ."
         echo "   - Branch: main"
         echo "   - API Token: 6f20c5c4-0f67-4713-9bd4-4d56760b8122"

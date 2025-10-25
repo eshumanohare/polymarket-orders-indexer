@@ -1,21 +1,20 @@
-# Envio HyperIndex Configuration for Polymarket CTF Exchange
-# This configuration will be used by Envio's hosted service
+// Envio HyperIndex Configuration for Polymarket CTF Exchange
+// This is the JavaScript configuration format for Envio
 
-# Version specification
-version: "2.30.0"
+module.exports = {
+  // Network configuration
+  network: {
+    name: 'polygon',
+    chainId: 137,
+    rpcUrl: 'https://polygon-rpc.com'
+  },
 
-# Network configuration
-network:
-  name: polygon
-  chainId: 137
-  rpcUrl: https://polygon-rpc.com
-
-# Contract configuration
-contracts:
-  - name: CTFExchange
-    address: "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E"
-    abi: |
-      [
+  // Contract configuration
+  contracts: [
+    {
+      name: 'CTFExchange',
+      address: '0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E',
+      abi: [
         {
           "anonymous": false,
           "inputs": [
@@ -72,14 +71,20 @@ contracts:
           "type": "event"
         }
       ]
+    }
+  ],
 
-# Event handlers
-eventHandlers:
-  - event: OrderFilled
-    handler: handleOrderFilled
+  // Event handlers
+  eventHandlers: [
+    {
+      event: 'OrderFilled',
+      handler: 'handleOrderFilled'
+    }
+  ],
 
-# Start block (recent block for faster initial sync)
-startBlock: 50000000
+  // Start block (recent block for faster initial sync)
+  startBlock: 50000000,
 
-# Block range for processing
-blockRange: 1000
+  // Block range for processing
+  blockRange: 1000
+};
