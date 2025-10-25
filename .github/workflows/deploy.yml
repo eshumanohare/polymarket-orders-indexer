@@ -22,8 +22,31 @@ jobs:
     - name: Clear npm cache
       run: npm cache clean --force
     
+    - name: Verify lock file exists
+      run: |
+        echo "Checking for lock files..."
+        ls -la | grep -E "(package-lock\.json|npm-shrinkwrap\.json|yarn\.lock)" || echo "No lock files found"
+        if [ -f package-lock.json ]; then
+          echo "✅ package-lock.json found"
+        else
+          echo "❌ package-lock.json not found"
+        fi
+    
     - name: Install dependencies
-      run: npm ci
+      run: |
+        if [ -f package-lock.json ]; then
+          echo "Using package-lock.json"
+          npm ci
+        elif [ -f npm-shrinkwrap.json ]; then
+          echo "Using npm-shrinkwrap.json"
+          npm ci
+        elif [ -f yarn.lock ]; then
+          echo "Using yarn.lock"
+          yarn install --frozen-lockfile
+        else
+          echo "No lock file found, installing with npm install"
+          npm install
+        fi
     
     - name: Build
       run: npm run build
